@@ -1,0 +1,8 @@
+node_modules
+yarn-error.lock
+
+env.*
+!env.dist
+now.json
+
+src/schema.graphql
