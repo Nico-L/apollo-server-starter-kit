@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:11-alpine
+    environment:
+      POSTGRES_DB: elevenlabs
+      POSTGRES_USER: elevenlabs
+      POSTGRES_PASSWORD: elevenlabs
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer
+    depends_on:
+    - db
+    ports:
+    - 2000:8080

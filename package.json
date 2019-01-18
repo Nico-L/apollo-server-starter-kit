@@ -4,16 +4,22 @@
   "dependencies": {
     "apollo-datasource-rest": "^0.2.1",
     "apollo-server": "2.1.0",
-    "graphql": "14.0.2"
+    "axios": "^0.18.0",
+    "dataloader": "^1.4.0",
+    "graphql": "14.0.2",
+    "knex": "^0.16.3",
+    "pg": "^7.8.0"
   },
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js localhost 4000"
+    "start": "nodemon index.js localhost 4000",
+    "knex": "knex --knexfile dataLayers/sql/knexfile.js"
   },
   "keywords": [],
   "devDependencies": {
     "@types/graphql": "14.0.1",
+    "cli-progress": "^2.1.1",
     "nodemon": "1.18.4"
   }
 }

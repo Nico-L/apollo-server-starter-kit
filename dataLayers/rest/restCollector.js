@@ -5,6 +5,8 @@ class RestCollector {
 
   _initializeData() {
     this.executionTime = 0;
+    this.maxExecutionTime = null;
+    this.minExecutionTime = null;
     this.requests = [];
   }
 
@@ -13,6 +15,12 @@ class RestCollector {
   }
 
   addRequest({ executionTime, request }) {
+    if (!this.maxExecutionTime || executionTime > this.maxExecutionTime) {
+      this.maxExecutionTime = executionTime;
+    }
+    if (!this.minExecutionTime || executionTime < this.minExecutionTime) {
+      this.minExecutionTime = executionTime;
+    }
     this.executionTime += executionTime;
     this.requests.push({
       executionTime: `${executionTime} ms`,

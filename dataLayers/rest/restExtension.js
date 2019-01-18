@@ -3,10 +3,12 @@ const RestCollector = require('./restCollector');
 class RestExtension {
 
     willSendResponse(graphqlResponse) {
-        const { executionTime, requests } = RestCollector;
+        const { executionTime, minExecutionTime, maxExecutionTime, requests } = RestCollector;
 
         let logging = `--------- START_MONITORING_REST ---------\n`;
-        logging += `Duration: ${executionTime} ms\n`;
+        logging += `Duration min request: ${minExecutionTime} ms\n`;
+        logging += `Duration max request: ${maxExecutionTime} ms\n`;
+        logging += `Duration total request: ${executionTime} ms\n`;
         logging += `Numbers of requests: ${requests.length}\n`;
         logging += `Requests REST: ${JSON.stringify(requests)}\n`;
         logging += `--------- END_MONITORING_REST ---------`;
