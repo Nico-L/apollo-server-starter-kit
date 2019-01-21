@@ -45,7 +45,7 @@ class RESTDataSource extends BaseRESTDataSource {
         const body = await this.parseBody(response);
 
         RestCollector.addRequest({
-            executionTime: hrend[1] / 1000000,
+            executionTimeRequest: hrend[1] / 1000000,
             request: {
                 url: response.url,
                 method: this.request.method,

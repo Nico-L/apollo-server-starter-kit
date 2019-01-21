@@ -23,6 +23,7 @@ const insertBindingsToSQL = (sql, bindings) => {
  */
 const Logger = (knex) => {
     const queries = {};
+
     knex
         .on('query', ({ sql, bindings, __knexQueryUid: queryId }) => {
             const startTime = process.hrtime();

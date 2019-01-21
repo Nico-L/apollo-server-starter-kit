@@ -1,3 +1,8 @@
 type Mutation {
   _empty: String
 }
+
+extend type Mutation {
+  signup(signupInput: SignupInput!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
+}

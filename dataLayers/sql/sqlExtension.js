@@ -8,7 +8,7 @@ class SQLGraphQLExtension {
         let logging = `--------- START MONITORING_SQL ---------\n`;
         logging += `Duration: ${executionTime} ms\n`;
         logging += `Numbers of queries: ${queries.length}\n`;
-        logging += `Queries SQL: ${JSON.stringify(queries)}\n`;
+        logging += `Queries SQL: ${JSON.stringify(queries, null, 4)}\n`;
         logging += `--------- END MONITORING_SQL ---------`;
         console.log(logging);
 

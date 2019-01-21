@@ -1,0 +1,7 @@
+type User implements Node {
+  id: ID!
+  email: String!
+  username: String!
+  roles: [ROLE]!
+  connected: Boolean!
+}

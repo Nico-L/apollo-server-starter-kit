@@ -4,9 +4,9 @@ class RestCollector {
   }
 
   _initializeData() {
-    this.executionTime = 0;
-    this.maxExecutionTime = null;
-    this.minExecutionTime = null;
+    this.globalExecutionTimeRequest = 0;
+    this.maxExecutionTimeRequest = null;
+    this.minExecutionTimeRequest = null;
     this.requests = [];
   }
 
@@ -14,16 +14,22 @@ class RestCollector {
     this._initializeData();
   }
 
-  addRequest({ executionTime, request }) {
-    if (!this.maxExecutionTime || executionTime > this.maxExecutionTime) {
-      this.maxExecutionTime = executionTime;
+  addRequest({ executionTimeRequest, request }) {
+    if (
+      !this.maxExecutionTimeRequest ||
+      executionTimeRequest > this.maxExecutionTimeRequest
+    ) {
+      this.maxExecutionTimeRequest = executionTimeRequest;
     }
-    if (!this.minExecutionTime || executionTime < this.minExecutionTime) {
-      this.minExecutionTime = executionTime;
+    if (
+      !this.minExecutionTimeRequest ||
+      executionTimeRequest < this.minExecutionTimeRequest
+    ) {
+      this.minExecutionTimeRequest = executionTimeRequest;
     }
-    this.executionTime += executionTime;
+    this.globalExecutionTimeRequest += executionTimeRequest;
     this.requests.push({
-      executionTime: `${executionTime} ms`,
+      executionTimeRequest: `${executionTimeRequest} ms`,
       request
     });
 

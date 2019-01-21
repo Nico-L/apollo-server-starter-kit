@@ -3,5 +3,6 @@ type Query {
 }
 
 extend type Query {
+  me: AuthPayload
   characters: [Character]
 }

@@ -16,7 +16,6 @@ const CharacterSeeder = async ({ progress, Database }) => {
     .then(({ data }) => data);
 
   progress.start(charactersMockData.length, 0);
-
   for (const key in charactersMockData) {
     const character = charactersMockData[key];
     await Database.insert({
@@ -28,8 +27,11 @@ const CharacterSeeder = async ({ progress, Database }) => {
     }).into("character");
     progress.increment();
   }
+  progress.stop();
+
 
   const characters = await Database.from("character");
+  progress.start(characters.length, 0);
   for (const key in characters) {
     const character = characters[key];
     const characterMockData = charactersMockData.find(

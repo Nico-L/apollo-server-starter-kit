@@ -3,16 +3,19 @@ const DataLoader = require("dataloader");
 
 class CharacterSQLDataSource extends SQLDataSource {
   initialize(config) {
-    const { Database } = config.context.dataLayers.sql;
+    const { Database, ModelFactory } = config.context.dataLayers.sql;
     this.Database = Database;
+    this.Character = ModelFactory.create("Character");
   }
 
   get characters() {
-    return this.Database.from("character");
+    return this.Character.all();
+    // return this.Database.from("character");
   }
 
   async findCharacterBySlug(slug) {
     return this.dataLoaders.characterBySlug.load(slug);
+    // return this.Character.findOne({ slug });
     // return this.Database.from("character")
     //   .where("slug", slug)
     //   .first();
