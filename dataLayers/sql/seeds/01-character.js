@@ -22,7 +22,6 @@ const CharacterSeeder = async ({ progress, Database }) => {
       slug: character.slug,
       name: character.name,
       titles: character.titles ? JSON.stringify(character.titles) : null,
-      gender: character.gender || null,
       culture: character.culture || null
     }).into("character");
     progress.increment();

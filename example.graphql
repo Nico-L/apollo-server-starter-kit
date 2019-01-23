@@ -1,0 +1,19 @@
+query CHARACTERS {
+  characters {
+    ...Character
+  }
+}
+
+fragment Character on Character {
+  slug
+  name
+  father {
+    name
+  }
+  mother {
+    name
+  }
+  heir {
+    name
+  }
+}

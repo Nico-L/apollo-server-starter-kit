@@ -1,3 +1,4 @@
+const DataLoader = require("dataloader");
 const { RESTDataSource } = require("../dataLayers/rest");
 
 class CharacterRESTDataSource extends RESTDataSource {
@@ -28,8 +29,9 @@ class CharacterRESTDataSource extends RESTDataSource {
 
   async findCharacterBySlug(slug) {
     const characters = await this.characters;
+    console.log(slug);
     return characters.find(character => character.slug === slug);
-    // return this.get(`/character/${slug}`);
+    return this.get(`/character/${slug}`);
   }
 }
 

@@ -7,7 +7,6 @@ const CharacterSchema = {
                 table.string('slug').notNullable();
                 table.string('name').notNullable();
                 table.json('titles');
-                table.enum('gender', ["MALE", "FEMALE"]);
                 table.string('culture');
                 table.integer("mother_id");
                 table.foreign("mother_id").references("character.id");
