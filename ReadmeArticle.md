@@ -59,23 +59,154 @@ Nous retrouvons ici :
 
 Petit conseil sur l'implémentation de votre schéma, ne reprenez pas la structure et le nommage de votre API REST, car c'est une chose très importante le nommage en GraphQL, une personne doit comprendre du premier coup d'oeil votre API rien quand regardant votre schéma.
 
-Nous allons ré-implémenter une API REST sur le thème de Game of Throne en GraphQL. Voici le dépot github de cette [API](http://github).
+L'API GraphQL sera sur le thème de Game Of Throne, on affichera les différents personnages et les différents maisons. Pour ce faire nous utiliserons l'API REST qui se trouve sur le dépot github de cette [API](http://github).
 
 
 ### Ajoutons les types
 
-Nous allons commencer par ajouter notre type `Character`  `src/definitions/Query.graphql` avec ceci:
+Ajoutons notre type `Character` dans le fichier `src/definitions/Type/Character.graphql`:
 
 ```graphql
-type Query {
-  _empty: String
+type Character {
+  slug: ID!
+  name: String!
+  imageUrl: String
+  father: Character
+  mother: Character
+  spouse: Character
+  childrens: [Character]
+  house: House
 }
+```
 
+Ajoutons notre type `House` dans le fichier `src/definitions/Type/House.graphql`:
+
+```graphql
+type House {
+  slug: ID!
+  name: String!
+  imageUrl: String
+  lord: Character
+  heirs: [Character]
+  characters: [Character]
+}
+```
+
+Ajoutons nos queries dans le fichier `src/definitions/Query.graphql`:
+
+```graphql
 extend type Query {
-  me: AuthPayload
+  characters: [Character]
+  houses: [House]
 }
 ```
 
 ## Créer un dataSource REST
+
+Nous allons créer deux dataSource REST un pour les personnages et l'autre pour les maisons.
+
+Ajoutons notre premier DataSource pour les personages dans le fichier `src/dataSources/CharacterRESTDataSource.js`:
+
+```js
+const { RESTDataSource } = require("apollo-datasource-rest");
+
+class CharacterRESTDataSource extends RESTDataSource {
+  constructor() {
+    super();
+    if (!process.env.ENDPOINT_GOT_API) {
+      throw new Error(
+        "You have not set the `ENDPOINT_GOT_API` environment variable !"
+      );
+    }
+    this.baseURL = process.env.ENDPOINT_GOT_API;
+  }
+
+  get characters() {
+    return this.get("/characters");
+  }
+
+  findCharacterBySlug(slug) {
+    return this.get(`/character/${slug}`);
+  }
+}
+
+module.exports = CharacterRESTDataSource;
+```
+
+Ajoutons notre deuxième DataSource pour les maisons dans le fichier `src/dataSources/HouseRESTDataSource.js`:
+
+```js
+const { RESTDataSource } = require("apollo-datasource-rest");
+
+class HouseRESTDataSource extends RESTDataSource {
+  constructor() {
+    super();
+    if (!process.env.ENDPOINT_GOT_API) {
+      throw new Error(
+        "You have not set the `ENDPOINT_GOT_API` environment variable !"
+      );
+    }
+    this.baseURL = process.env.ENDPOINT_GOT_API;
+  }
+
+  get houses() {
+    return this.get("/houses");
+  }
+
+  findHouseBySlug(slug) {
+    return this.get(`/house/${slug}`);
+  }
+}
+
+module.exports = HouseRESTDataSource;
+```
+
+## Ajoutons nos resolveurs
+
+Ajoutons notre premier resolveur pour les personnages dans le fichier `src/resolvers/character.js`:
+
+```js
+const resolvers = {
+  Query: {
+    characters: (
+      parent,
+      args,
+      { dataSources: { CharacterRESTDataSource } },
+      info
+    ) => CharacterRESTDataSource.characters
+  },
+  Character: {
+    father: (parent, args, { dataSources: { CharacterRESTDataSource } }) => parent.father ? CharacterRESTDataSource.findCharacterBySlug(parent.father) : null,
+    mother: (parent, args, { dataSources: { CharacterRESTDataSource } }) => parent.mother ? CharacterRESTDataSource.findCharacterBySlug(parent.mother) : null,
+    spouses: (parent, args, { dataSources: { CharacterRESTDataSource } }) => parent.spouses ? CharacterRESTDataSource.findCharactersBySlug(parent.spouses) : null,
+    childrens: (parent, args, { dataSources: { CharacterRESTDataSource } }) => parent.childrens ? CharacterRESTDataSource.findCharactersBySlug(parent.childrens) : null,
+    house: (parent, args, { dataSources: { HouseRESTDataSource } }) => parent.house ? HouseRESTDataSource.findHouseBySlug(parent.house) : null,
+  }
+};
+
+module.exports = resolvers;
+```
+
+Ajoutons notre deuxième resolveur pour les maisons dans le fichier `src/resolvers/house.js`:
+
+```js
+const resolvers = {
+  Query: {
+    characters: (
+      parent,
+      args,
+      { dataSources: { CharacterRESTDataSource } },
+      info
+    ) => CharacterRESTDataSource.characters
+  },
+  House: {
+    lord: (parent, args, { dataSources: { CharacterRESTDataSource } }) => parent.lord ? CharacterRESTDataSource.findCharacterBySlug(parent.lord) : null,
+    heirs: (parent, args, { dataSources: { CharacterRESTDataSource } }) => parent.heirs ? CharacterRESTDataSource.findCharactersBySlug(parent.heirs) : null,
+    characters: (parent, args, { dataSources: { CharacterRESTDataSource } }) => parent.father ? CharacterRESTDataSource.findCharactersByHouseSlug(parent.slug) : null,
+  },
+};
+
+module.exports = resolvers;
+```
 
 ## Analyser et optimiser notre API GraphQL

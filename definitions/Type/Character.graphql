@@ -3,19 +3,23 @@ type BirthOrDeath {
   place: String
 }
 
+type PageInfo {
+  currentPage: Int!
+  perPage: Int!
+  lastPage: Int!
+  total: Int!
+}
+
+interface ItemsWithPagination {
+  pageInfo: PageInfo!
+}
+
 type Character {
   slug: ID!
   name: String!
   imageUrl: String
-  titles: [String]
-  culture: String
-  birth: BirthOrDeath
-  death: BirthOrDeath
-  house: String
   father: Character
   mother: Character
-  heir: Character
-  spouse: String
-  race: String
-  allegiances: [String]
+  spouses: [Character]
+  childrens: [Character]
 }
