@@ -2,8 +2,9 @@
   "name": "apollo-server-starter-kit",
   "description": "",
   "dependencies": {
-    "apollo-server": "2.9.15",
-    "graphql": "14.5.8"
+    "apollo-server": "^2.9.15",
+    "graphql": "^14.5.8",
+    "lodash": "4.17.15"
   },
   "license": "MIT",
   "main": "index.js",
